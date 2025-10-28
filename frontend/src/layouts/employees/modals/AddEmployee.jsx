@@ -74,9 +74,15 @@ function AddEmployeeModal({ isOpen, onClose }) {
             setLoading(false);
             onClose();
         } catch (error) {
-            let Error = error.response.data.message
+            console.error('Error adding employee:', error);
+            let errorMessage = 'Failed to add employee';
+            if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
             toast({
-                title: Error,
+                title: errorMessage,
                 status: 'error',
                 position: 'top',
                 duration: 5000,

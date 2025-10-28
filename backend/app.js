@@ -19,11 +19,13 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 connectDB();
 
-// CORS configuration for production
+// CORS configuration for production - allow all origins for now
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: '*', // Allow all origins
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(express.json());
