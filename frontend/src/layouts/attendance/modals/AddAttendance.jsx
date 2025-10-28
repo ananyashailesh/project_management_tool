@@ -20,12 +20,6 @@ function AddAttendanceModal({ isOpen, onClose }) {
     const [selectedEmployee, setSelectedEmployee] = useState('');
     const [attendanceType, setAttendanceType] = useState('');
 
-    const token = localStorage.getItem("tm_token");
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
     const getEmployees = async () => {
         try {
             const response = await api.get('/api/employees')
@@ -53,7 +47,7 @@ function AddAttendanceModal({ isOpen, onClose }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/api/attendance', {
+            const response = await api.post('/api/attendance', {
                 employeeId: selectedEmployee,
                 day: getCurrentDate(),
                 timeIn: attendanceType === 'time_in' ? getCurrentTime() : null,

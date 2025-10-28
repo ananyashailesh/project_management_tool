@@ -43,17 +43,12 @@ function AddEmployeeModal({ isOpen, onClose }) {
     const handleGenderClick = (gender) => {
         setFormData({ ...formData, gender });
     };
-    const token = localStorage.getItem("tm_token");
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/api/employee', formData);
+            const response = await api.post('/api/employee', formData);
             setFormData({
                 employee_id: '1',
                 firstName: '',

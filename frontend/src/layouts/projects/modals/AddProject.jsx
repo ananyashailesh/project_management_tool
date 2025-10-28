@@ -37,17 +37,12 @@ function AddProjectModal({ isOpen, onClose }) {
     const handleTagClick = (priority) => {
         setFormData({ ...formData, priority });
     };
-    const token = localStorage.getItem("tm_token");
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/api/project', formData);
+            const response = await api.post('/api/project', formData);
             setFormData({
                 title: '',
                 description: '',

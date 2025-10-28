@@ -39,12 +39,6 @@ function AddTimesheetModal({ isOpen, onClose }) {
     const handleTypeClick = (type) => {
         setFormData({ ...formData, type });
     };
-    const token = localStorage.getItem("tm_token");
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
 
     const getEmployees = async () => {
         try {
@@ -80,7 +74,7 @@ function AddTimesheetModal({ isOpen, onClose }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/api/timesheet', formData);
+            const response = await api.post('/api/timesheet', formData);
             setFormData({
                 notes: '',
                 employee: '',

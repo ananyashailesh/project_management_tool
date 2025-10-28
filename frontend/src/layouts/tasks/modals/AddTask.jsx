@@ -37,13 +37,6 @@ function AddTaskModal({ isOpen, onClose }) {
         setFormData({ ...formData, priority });
     };
 
-    const token = localStorage.getItem("tm_token");
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
-
     const getEmployees = async () => {
         try {
             const response = await api.get('/api/employees')
@@ -70,7 +63,7 @@ function AddTaskModal({ isOpen, onClose }) {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/api/task', formData);
+            const response = await api.post('/api/task', formData);
             setFormData({
                 title: '',
                 description: '',
