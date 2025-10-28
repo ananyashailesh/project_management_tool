@@ -19,7 +19,6 @@ function Attendance() {
   const [isAddAttendanceModalOpen, setIsAddAttendanceModalOpen] = useState(false);
   const [attendancesData, setAttendancesData] = useState([]);
   const [filteredAttendancesData, setFilteredAttendancesData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const getAttendances = async () => {
     try {
@@ -46,8 +45,6 @@ function Attendance() {
   };
 
   const handleSearch = (query) => {
-    setSearchQuery(query);
-    
     if (!query.trim()) {
       setFilteredAttendancesData(attendancesData);
       return;

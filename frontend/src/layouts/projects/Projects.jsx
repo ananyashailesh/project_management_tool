@@ -34,7 +34,6 @@ function Projects() {
     pendingProjects: 0,
   });
   const [selectedProject, setSelectedProject] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
 
   const getProjects = async () => {
     try {
@@ -82,8 +81,6 @@ function Projects() {
   };
 
   const handleSearch = (query) => {
-    setSearchQuery(query);
-    
     if (!query.trim()) {
       setFilteredProjectsData(projectsData);
       return;

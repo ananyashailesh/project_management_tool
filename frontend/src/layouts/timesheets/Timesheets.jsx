@@ -31,7 +31,6 @@ function Timesheets() {
     testType: 0,
     otherType: 0,
   });
-  const [searchQuery, setSearchQuery] = useState('');
 
   const openAddTimesheetModal = () => {
     setIsAddTimesheetModalOpen(true);
@@ -63,8 +62,6 @@ function Timesheets() {
   }
 
   const handleSearch = (query) => {
-    setSearchQuery(query);
-    
     if (!query.trim()) {
       setFilteredTimesheetsData(timesheetsData);
       return;

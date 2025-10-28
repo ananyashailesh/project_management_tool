@@ -31,7 +31,6 @@ function Employees() {
     inActiveEmployees: 0,
     terminatedEmployees: 0,
   });
-  const [searchQuery, setSearchQuery] = useState('');
 
   const openAddEmployeeModal = () => {
     setIsAddEmployeeModalOpen(true);
@@ -63,8 +62,6 @@ function Employees() {
   }
 
   const handleSearch = (query) => {
-    setSearchQuery(query);
-    
     if (!query.trim()) {
       setFilteredEmployeesData(employeesData);
       return;

@@ -32,7 +32,6 @@ function Tasks() {
         pendingTasks: 0,
     });
     const [selectedTask, setSelectedTask] = useState(null);
-    const [searchQuery, setSearchQuery] = useState('');
 
     const getTasks = async () => {
         try {
@@ -54,8 +53,6 @@ function Tasks() {
     };
 
     const handleSearch = (query) => {
-        setSearchQuery(query);
-        
         if (!query.trim()) {
             setFilteredTasksData(tasksData);
             return;
