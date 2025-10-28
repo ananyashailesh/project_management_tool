@@ -27,6 +27,6 @@ const projectSchema = new mongoose.Schema({
         enum: ['Most Important', 'Important', 'Least Important'],
         required: true,
     },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Project', projectSchema);

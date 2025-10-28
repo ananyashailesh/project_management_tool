@@ -61,4 +61,15 @@ router.post('/attendance', async (req, res) => {
     }
 });
 
+router.get('/attendances', async (req, res) => {
+    try {
+        const attendances = await Attendance.find()
+            .populate('employee', 'firstName lastName employee_id')
+            .sort({ createdAt: -1 });
+        res.status(200).json(attendances);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;

@@ -33,10 +33,34 @@ router.post('/task', async (req, res) => {
 
 router.get('/tasks', async (req, res) => {
     try {
-        const tasks = await Task.find();
+        const tasks = await Task.find()
+            .populate('assignTo', 'firstName lastName')
+            .populate('project', 'title')
+            .sort({ createdAt: -1 });
         res.send(tasks)
     } catch (error) {
         res.status(500).json({ message: error });
     }
 });
+
+router.get('/tasks-stats', async (req, res) => {
+    try {
+        const totalTasks = await Task.countDocuments();
+        const completedTasks = await Task.countDocuments({ status: 'Completed' });
+        const inProgressTasks = await Task.countDocuments({ status: 'In Progress' });
+        const pendingTasks = await Task.countDocuments({ status: 'Pending' });
+
+        const tasksStats = {
+            totalTasks,
+            completedTasks,
+            inProgressTasks,
+            pendingTasks,
+        };
+
+        res.status(200).json(tasksStats);
+    } catch (error) {
+        res.status(500).json({ message: error });
+    }
+});
+
 module.exports = router

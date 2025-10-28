@@ -24,12 +24,14 @@ import axios from 'axios'
 function Employees() {
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
   const [employeesData, setEmployeesData] = useState([]);
+  const [filteredEmployeesData, setFilteredEmployeesData] = useState([]);
   const [employeesStats, setEmployeesStats] = useState({
     totalEmployees: 0,
     activeEmployees: 0,
     inActiveEmployees: 0,
     terminatedEmployees: 0,
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   const openAddEmployeeModal = () => {
     setIsAddEmployeeModalOpen(true);
@@ -37,12 +39,16 @@ function Employees() {
 
   const closeAddEmployeeModal = () => {
     setIsAddEmployeeModalOpen(false);
+    // Refresh data after closing modal
+    getEmployees();
+    getEmployeesStats();
   };
 
   const getEmployees = async () => {
     try {
       const response = await axios.get('api/employees')
       setEmployeesData(response.data)
+      setFilteredEmployeesData(response.data)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -55,6 +61,27 @@ function Employees() {
       console.error('Error:', error);
     }
   }
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    
+    if (!query.trim()) {
+      setFilteredEmployeesData(employeesData);
+      return;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+    const filtered = employeesData.filter(employee => 
+      employee.name?.toLowerCase().includes(lowercaseQuery) ||
+      employee.email?.toLowerCase().includes(lowercaseQuery) ||
+      employee.designation?.toLowerCase().includes(lowercaseQuery) ||
+      employee.department?.toLowerCase().includes(lowercaseQuery) ||
+      employee.status?.toLowerCase().includes(lowercaseQuery)
+    );
+    
+    setFilteredEmployeesData(filtered);
+  };
+
   useEffect(() => {
     getEmployees()
     getEmployeesStats()
@@ -65,7 +92,7 @@ function Employees() {
       <div className='app-main-container'>
         <div className='app-main-left-container'><Sidenav /></div>
         <div className='app-main-right-container'>
-          <Navbar />
+          <Navbar onSearch={handleSearch} />
           <div className='task-status-card-container'>
             <div className='add-task-inner-div'>
               <FcStatistics className='task-stats' />
@@ -124,7 +151,7 @@ function Employees() {
                 </Tr>
               </Thead>
               <Tbody>
-                {employeesData && employeesData.map((employee) => (
+                {filteredEmployeesData && filteredEmployeesData.map((employee) => (
                   <Tr key={employee._id}>
                     <Td>{employee.employee_id}</Td>
                     <Td>{`${employee.firstName} ${employee.lastName}`}</Td>

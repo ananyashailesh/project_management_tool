@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../../components/navbar/Navbar'
 import Sidenav from '../../components/sidenav/Sidenav'
 import "./attendance.css"
@@ -12,22 +12,62 @@ import {
   TableContainer,
 } from '@chakra-ui/react'
 import { IoMdAdd } from "react-icons/io";
-
-// import totaltasks from '../../assets/tasks/totaltasks.png';
-// import totalprogress from '../../assets/tasks/totalprogress.png';
-// import totalpending from '../../assets/tasks/totalpending.png';
-// import totalcomplete from '../../assets/tasks/totalcomplete.png';
-// import { FcStatistics } from "react-icons/fc";
 import AddAttendanceModal from './modals/AddAttendance';
+import axios from 'axios';
 
 function Attendance() {
   const [isAddAttendanceModalOpen, setIsAddAttendanceModalOpen] = useState(false);
+  const [attendancesData, setAttendancesData] = useState([]);
+  const [filteredAttendancesData, setFilteredAttendancesData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const getAttendances = async () => {
+    try {
+      const response = await axios.get('api/attendances');
+      setAttendancesData(response.data);
+      setFilteredAttendancesData(response.data);
+    } catch (error) {
+      console.error('Error fetching attendances:', error);
+    }
+  };
+
+  useEffect(() => {
+    getAttendances();
+  }, []);
+
   const openAddAttendanceModal = () => {
     setIsAddAttendanceModalOpen(true);
   };
 
   const closeAddAttendanceModal = () => {
     setIsAddAttendanceModalOpen(false);
+    // Refresh data after closing modal
+    getAttendances();
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    
+    if (!query.trim()) {
+      setFilteredAttendancesData(attendancesData);
+      return;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+    const filtered = attendancesData.filter(attendance => 
+      attendance.employee?.firstName?.toLowerCase().includes(lowercaseQuery) ||
+      attendance.employee?.lastName?.toLowerCase().includes(lowercaseQuery) ||
+      attendance.employee?.email?.toLowerCase().includes(lowercaseQuery) ||
+      calculateStatus(attendance.timeIn, attendance.timeOut).toLowerCase().includes(lowercaseQuery)
+    );
+    
+    setFilteredAttendancesData(filtered);
+  };
+
+  const calculateStatus = (timeIn, timeOut) => {
+    if (timeIn && timeOut) return 'Complete';
+    if (timeIn) return 'Checked In';
+    return 'Absent';
   };
 
   return (
@@ -36,7 +76,7 @@ function Attendance() {
       <div className='app-main-container'>
         <div className='app-main-left-container'><Sidenav /></div>
         <div className='app-main-right-container'>
-          <Navbar />
+          <Navbar onSearch={handleSearch} />
           {/* <div className='task-status-card-container'>
             <div className='add-task-inner-div'>
               <FcStatistics className='task-stats' />
@@ -94,51 +134,23 @@ function Attendance() {
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
+                {filteredAttendancesData && filteredAttendancesData.length > 0 ? filteredAttendancesData.map((attendance) => (
+                  <Tr key={attendance._id}>
+                    <Td>{attendance.day}</Td>
+                    <Td>{attendance.timeIn || 'Not marked'}</Td>
+                    <Td>{attendance.timeOut || 'Not marked'}</Td>
+                    <Td>{attendance.employee ? `${attendance.employee.firstName} ${attendance.employee.lastName}` : 'N/A'}</Td>
+                    <Td>{attendance.workingHours || 'N/A'}</Td>
+                    <Td>{calculateStatus(attendance.timeIn, attendance.timeOut)}</Td>
+                    <Td>
+                      Button
+                    </Td>
+                  </Tr>
+                )) : (
+                  <Tr>
+                    <Td colSpan={7} style={{textAlign: 'center'}}>No attendance records found</Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           </TableContainer>

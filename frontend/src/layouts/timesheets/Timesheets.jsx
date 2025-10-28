@@ -24,24 +24,31 @@ import axios from 'axios';
 function Timesheets() {
   const [isAddTimesheetModalOpen, setIsAddTimesheetModalOpen] = useState(false);
   const [timesheetsData, setTimesheetsData] = useState([]);
+  const [filteredTimesheetsData, setFilteredTimesheetsData] = useState([]);
   const [timesheetsStats, setTimesheetsStats] = useState({
     totalTimesheets: 0,
     developmentType: 0,
     testType: 0,
     otherType: 0,
   });
+  const [searchQuery, setSearchQuery] = useState('');
+
   const openAddTimesheetModal = () => {
     setIsAddTimesheetModalOpen(true);
   };
 
   const closeAddTimesheetModal = () => {
     setIsAddTimesheetModalOpen(false);
+    // Refresh data after closing modal
+    getTimesheets();
+    getTimesheetsStats();
   };
 
   const getTimesheets = async () => {
     try {
       const response = await axios.get('api/timesheets')
       setTimesheetsData(response.data)
+      setFilteredTimesheetsData(response.data)
     } catch (error) {
       console.error('Error:', error);
     }
@@ -54,6 +61,27 @@ function Timesheets() {
       console.error('Error:', error);
     }
   }
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    
+    if (!query.trim()) {
+      setFilteredTimesheetsData(timesheetsData);
+      return;
+    }
+
+    const lowercaseQuery = query.toLowerCase();
+    const filtered = timesheetsData.filter(timesheet => 
+      timesheet.employee?.name?.toLowerCase().includes(lowercaseQuery) ||
+      timesheet.project?.title?.toLowerCase().includes(lowercaseQuery) ||
+      timesheet.task?.title?.toLowerCase().includes(lowercaseQuery) ||
+      timesheet.type?.toLowerCase().includes(lowercaseQuery) ||
+      timesheet.description?.toLowerCase().includes(lowercaseQuery)
+    );
+    
+    setFilteredTimesheetsData(filtered);
+  };
+
   useEffect(() => {
     getTimesheets()
     getTimesheetsStats()
@@ -64,7 +92,7 @@ function Timesheets() {
       <div className='app-main-container'>
         <div className='app-main-left-container'><Sidenav /></div>
         <div className='app-main-right-container'>
-          <Navbar />
+          <Navbar onSearch={handleSearch} />
           <div className='task-status-card-container'>
             <div className='add-task-inner-div'>
               <FcStatistics className='task-stats' />
@@ -124,61 +152,25 @@ function Timesheets() {
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
-                <Tr>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                  <Td>inches</Td>
-                </Tr>
+                {filteredTimesheetsData && filteredTimesheetsData.length > 0 ? filteredTimesheetsData.map((timesheet) => (
+                  <Tr key={timesheet._id}>
+                    <Td>{timesheet.notes}</Td>
+                    <Td>{timesheet.employee ? `${timesheet.employee.firstName} ${timesheet.employee.lastName}` : 'N/A'}</Td>
+                    <Td>{timesheet.project ? timesheet.project.title : 'N/A'}</Td>
+                    <Td>{timesheet.task ? timesheet.task.title : 'N/A'}</Td>
+                    <Td>{timesheet.progress}%</Td>
+                    <Td>{timesheet.timeSpent} hrs</Td>
+                    <Td>{timesheet.date ? new Date(timesheet.date).toLocaleDateString() : 'N/A'}</Td>
+                    <Td>{timesheet.type}</Td>
+                    <Td>
+                      Button
+                    </Td>
+                  </Tr>
+                )) : (
+                  <Tr>
+                    <Td colSpan={9} style={{textAlign: 'center'}}>No timesheets found</Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           </TableContainer>

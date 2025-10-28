@@ -19,7 +19,11 @@ router.post('/timesheet', async (req, res) => {
 
 router.get('/timesheets', async (req, res) => {
     try {
-        const timesheets = await Timesheet.find();
+        const timesheets = await Timesheet.find()
+            .populate('employee', 'firstName lastName')
+            .populate('project', 'title')
+            .populate('task', 'title')
+            .sort({ createdAt: -1 });
         res.send(timesheets)
     } catch (error) {
         res.status(500).json({ message: error });
