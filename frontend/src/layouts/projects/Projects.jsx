@@ -18,7 +18,7 @@ import {
 import AddProjectModal from './modals/AddProject';
 import ReadProjectModal from './modals/ReadProject';
 import { IoMdAdd } from "react-icons/io";
-import axios from 'axios';
+import api from '../../config/axios';
 
 
 function Projects() {
@@ -37,7 +37,7 @@ function Projects() {
 
   const getProjects = async () => {
     try {
-      const response = await axios.get('api/projects');
+      const response = await api.get('/api/projects');
       setProjectsData(response.data);
       setFilteredProjectsData(response.data);
     } catch (error) {
@@ -47,7 +47,7 @@ function Projects() {
 
   const getProjectsStats = async () => {
     try {
-      const response = await axios.get('api/projects-stats');
+      const response = await api.get('/api/projects-stats');
       setProjectsStats(response.data);
     } catch (error) {
       console.error('Error fetching project stats:', error);

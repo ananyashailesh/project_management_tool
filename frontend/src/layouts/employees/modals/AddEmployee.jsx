@@ -11,7 +11,7 @@ import {
     Input,
     Tag,
 } from '@chakra-ui/react';
-import axios from 'axios';
+import api from '../../../config/axios';
 import { useToast, Spinner } from '@chakra-ui/react';
 
 function AddEmployeeModal({ isOpen, onClose }) {

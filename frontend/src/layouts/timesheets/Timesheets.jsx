@@ -19,7 +19,7 @@ import totalpending from '../../assets/tasks/totalpending.png';
 import totalcomplete from '../../assets/tasks/totalcomplete.png';
 import { FcStatistics } from "react-icons/fc";
 import AddTimesheetModal from './modals/AddTimesheet';
-import axios from 'axios';
+import api from '../../config/axios';
 
 function Timesheets() {
   const [isAddTimesheetModalOpen, setIsAddTimesheetModalOpen] = useState(false);
@@ -45,7 +45,7 @@ function Timesheets() {
 
   const getTimesheets = async () => {
     try {
-      const response = await axios.get('api/timesheets')
+      const response = await api.get('/api/timesheets')
       setTimesheetsData(response.data)
       setFilteredTimesheetsData(response.data)
     } catch (error) {
@@ -54,7 +54,7 @@ function Timesheets() {
   }
   const getTimesheetsStats = async () => {
     try {
-      const response = await axios.get('api/timesheets-stats')
+      const response = await api.get('/api/timesheets-stats')
       setTimesheetsStats(response.data)
     } catch (error) {
       console.error('Error:', error);

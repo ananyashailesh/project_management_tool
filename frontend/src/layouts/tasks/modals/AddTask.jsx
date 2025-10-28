@@ -13,7 +13,7 @@ import {
     Tag,
     Select,
 } from '@chakra-ui/react';
-import axios from 'axios';
+import api from '../../../config/axios';
 import { useToast, Spinner } from '@chakra-ui/react';
 
 function AddTaskModal({ isOpen, onClose }) {
@@ -46,7 +46,7 @@ function AddTaskModal({ isOpen, onClose }) {
 
     const getEmployees = async () => {
         try {
-            const response = await axios.get('api/employees')
+            const response = await api.get('/api/employees')
             setEmployeesData(response.data)
         } catch (error) {
             console.error('Error:', error);
@@ -54,7 +54,7 @@ function AddTaskModal({ isOpen, onClose }) {
     }
     const getProjects = async () => {
         try {
-            const response = await axios.get('api/projects')
+            const response = await api.get('/api/projects')
             setProjectsData(response.data)
         } catch (error) {
             console.error('Error:', error);

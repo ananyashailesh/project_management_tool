@@ -4,7 +4,7 @@ import login from "../../assets/register/login.png"
 import email from "../../assets/register/email.png"
 import password from "../../assets/register/password.png"
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../config/axios';
 import { useToast, Spinner } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function Login() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('api/login', formData);
+            const response = await api.post('/api/login', formData);
             localStorage.setItem('tm_token', response.data.token);
             navigate('/admin/dashboard')
         } catch (error) {

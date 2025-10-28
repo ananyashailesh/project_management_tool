@@ -10,7 +10,7 @@ import totalpending from '../../assets/tasks/totalpending.png';
 import totalcomplete from '../../assets/tasks/totalcomplete.png';
 import { FcStatistics } from "react-icons/fc";
 import Navbar from '../../components/navbar/Navbar';
-import axios from 'axios';
+import api from '../../config/axios';
 
 function Dashboard() {
   const [dashboardData, setDashboardData] = useState({
@@ -22,7 +22,7 @@ function Dashboard() {
 
   const getDashboard = async () => {
     try {
-      const response = await axios.get('api/dashboard');
+      const response = await api.get('/api/dashboard');
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);

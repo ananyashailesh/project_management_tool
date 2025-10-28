@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { IoMdAdd } from "react-icons/io";
 import AddAttendanceModal from './modals/AddAttendance';
-import axios from 'axios';
+import api from '../../config/axios';
 
 function Attendance() {
   const [isAddAttendanceModalOpen, setIsAddAttendanceModalOpen] = useState(false);
@@ -22,7 +22,7 @@ function Attendance() {
 
   const getAttendances = async () => {
     try {
-      const response = await axios.get('api/attendances');
+      const response = await api.get('/api/attendances');
       setAttendancesData(response.data);
       setFilteredAttendancesData(response.data);
     } catch (error) {

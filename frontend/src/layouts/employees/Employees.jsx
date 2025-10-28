@@ -19,7 +19,7 @@ import totalpending from '../../assets/tasks/totalpending.png';
 import totalcomplete from '../../assets/tasks/totalcomplete.png';
 import { FcStatistics } from "react-icons/fc";
 import AddEmployeeModal from './modals/AddEmployee';
-import axios from 'axios'
+import api from '../../config/axios'
 
 function Employees() {
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
@@ -45,7 +45,7 @@ function Employees() {
 
   const getEmployees = async () => {
     try {
-      const response = await axios.get('api/employees')
+      const response = await api.get('/api/employees')
       setEmployeesData(response.data)
       setFilteredEmployeesData(response.data)
     } catch (error) {
@@ -54,7 +54,7 @@ function Employees() {
   }
   const getEmployeesStats = async () => {
     try {
-      const response = await axios.get('api/employees-stats')
+      const response = await api.get('/api/employees-stats')
       setEmployeesStats(response.data)
     } catch (error) {
       console.error('Error:', error);

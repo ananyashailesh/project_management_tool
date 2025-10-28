@@ -6,7 +6,7 @@ import email from "../../assets/register/email.png"
 import password from "../../assets/register/password.png"
 import cpassword from "../../assets/register/cpassword.png"
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../config/axios';
 import { useToast, Spinner } from '@chakra-ui/react';
 
 function Register() {
@@ -26,7 +26,7 @@ function Register() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response=await axios.post('api/register', formData);
+            const response=await api.post('/api/register', formData);
             setFormData({
                 firstName: '',
                 lastName: '',

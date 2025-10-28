@@ -18,7 +18,7 @@ import {
 import AddTaskModal from './modals/AddTask';
 import ReadTaskModal from './modals/ReadTask';
 import { IoMdAdd } from "react-icons/io";
-import axios from 'axios';
+import api from '../../config/axios';
 
 function Tasks() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
@@ -35,7 +35,7 @@ function Tasks() {
 
     const getTasks = async () => {
         try {
-            const response = await axios.get('api/tasks');
+            const response = await api.get('/api/tasks');
             setTasksData(response.data);
             setFilteredTasksData(response.data);
         } catch (error) {
@@ -45,7 +45,7 @@ function Tasks() {
 
     const getTasksStats = async () => {
         try {
-            const response = await axios.get('api/tasks-stats');
+            const response = await api.get('/api/tasks-stats');
             setTasksStats(response.data);
         } catch (error) {
             console.error('Error fetching task stats:', error);

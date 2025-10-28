@@ -12,7 +12,7 @@ import {
     Textarea,
     Tag,
 } from '@chakra-ui/react';
-import axios from 'axios';
+import api from '../../../config/axios';
 import { useToast, Spinner } from '@chakra-ui/react';
 
 function AddProjectModal({ isOpen, onClose }) {
