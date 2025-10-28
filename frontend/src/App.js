@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Register from './layouts/auth/Register.jsx';
 import Login from './layouts/auth/Login.jsx';
 import Dashboard from './layouts/dashboard/Dashboard.jsx';
@@ -14,8 +14,9 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path='/' element={<Login />} />
+          <Route path='/' element={<Navigate to="/admin/dashboard" replace />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
           <Route path='/admin/dashboard' element={<Dashboard />} />
           <Route path='/admin/employees' element={<Employees />} />
           <Route path='/admin/projects' element={<Projects />} />
